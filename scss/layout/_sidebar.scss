@@ -1,0 +1,113 @@
+@use "../abstracts/variables" as *;
+@use "../abstracts/mixins" as *;
+
+// Mobile-first: sticky top bar with horizontal nav.
+// From $bp-md: full-height left rail; footer actions pushed to the bottom.
+.sidebar {
+  position: sticky;
+  top: 0;
+  z-index: $z-sidebar;
+  display: flex;
+  align-items: center;
+  gap: $space-4;
+  padding: $space-3 $space-4;
+  background-color: var(--color-surface);
+  border-bottom: 1px solid var(--color-line);
+
+  @include respond($bp-md) {
+    flex-direction: column;
+    align-items: stretch;
+    gap: $space-2;
+    height: 100vh;
+    padding: $space-5 $space-3;
+    border-bottom: none;
+    border-right: 1px solid var(--color-line);
+  }
+
+  &__logo {
+    font-family: $font-display;
+    font-weight: 800;
+    font-size: $text-md;
+    letter-spacing: -0.02em;
+    color: var(--color-brand);
+    white-space: nowrap;
+    @include focus-ring;
+
+    @include respond($bp-md) {
+      padding: 0 $space-3 $space-4;
+    }
+  }
+
+  &__nav {
+    display: flex;
+    gap: $space-1;
+    overflow-x: auto;
+
+    @include respond($bp-md) {
+      flex-direction: column;
+      overflow-x: visible;
+    }
+  }
+
+  &__link {
+    padding: $space-2 $space-3;
+    border-radius: $radius-sm;
+    // Reserve the spine slot so links don't shift when --active lands
+    border-left: $spine-width solid transparent;
+    font-size: $text-sm;
+    font-weight: 500;
+    color: var(--color-ink-muted);
+    white-space: nowrap;
+    transition: background-color $speed-fast $ease-out, color $speed-fast $ease-out;
+    @include focus-ring;
+
+    &:hover {
+      color: var(--color-ink);
+      background-color: var(--color-canvas);
+    }
+
+    &--active {
+      color: var(--color-brand);
+      background-color: var(--color-brand-tint);
+      border-left-color: var(--color-brand);
+    }
+  }
+
+  &__footer {
+    display: flex;
+    align-items: center;
+    gap: $space-2;
+    margin-left: auto;
+
+    @include respond($bp-md) {
+      flex-direction: column;
+      align-items: stretch;
+      margin-left: 0;
+      margin-top: auto;
+      padding-top: $space-4;
+      border-top: 1px solid var(--color-line);
+    }
+  }
+
+  &__action {
+    padding: $space-2 $space-3;
+    border-radius: $radius-sm;
+    font-size: $text-sm;
+    font-weight: 500;
+    color: var(--color-ink-muted);
+    white-space: nowrap;
+    text-align: left;
+    transition: background-color $speed-fast $ease-out, color $speed-fast $ease-out;
+    @include focus-ring;
+
+    &:hover {
+      color: var(--color-ink);
+      background-color: var(--color-canvas);
+    }
+
+    &--logout:hover {
+      color: var(--color-danger);
+      background-color: var(--color-danger-tint);
+    }
+  }
+}

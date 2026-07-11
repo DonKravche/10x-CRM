@@ -1,0 +1,27 @@
+@use "../abstracts/variables" as *;
+@use "../abstracts/mixins" as *;
+
+// Protected zone shell. Mobile: normal flow — the sidebar renders as a
+// top bar above the workspace. From $bp-md: fixed-width left rail + fluid main.
+.app-layout {
+  min-height: 100vh;
+
+  @include respond($bp-md) {
+    display: grid;
+    grid-template-columns: 15rem 1fr;
+  }
+}
+
+.workspace {
+  padding: $space-4;
+
+  @include respond($bp-md) {
+    padding: $space-6;
+  }
+
+  @include respond($bp-xl) {
+    max-width: 72rem;
+    width: 100%;
+    margin-inline: auto;
+  }
+}

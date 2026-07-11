@@ -1,0 +1,76 @@
+@use "../abstracts/variables" as *;
+@use "../abstracts/mixins" as *;
+
+// Public zone: full-viewport centering wrapper + card.
+// .auth-container owns positioning; .auth-card owns appearance.
+.auth-container {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: $space-4;
+}
+
+.auth-card {
+  @include surface;
+  width: 100%;
+  max-width: 26rem;
+  padding: $space-5;
+
+  @include respond($bp-sm) {
+    padding: $space-7;
+  }
+
+  &__header {
+    margin-bottom: $space-5;
+  }
+
+  &__brand {
+    display: inline-block;
+    margin-bottom: $space-4;
+    font-family: $font-display;
+    font-weight: 800;
+    font-size: $text-md;
+    letter-spacing: -0.02em;
+    color: var(--color-brand);
+  }
+
+  &__title {
+    font-size: $text-xl;
+    margin-bottom: $space-1;
+
+    @include respond($bp-sm) {
+      font-size: $text-2xl;
+    }
+  }
+
+  &__subtitle {
+    font-size: $text-sm;
+    color: var(--color-ink-muted);
+  }
+
+  &__redirect {
+    margin-top: $space-5;
+    text-align: center;
+    font-size: $text-sm;
+    color: var(--color-ink-muted);
+  }
+
+  &__link {
+    font-weight: 600;
+    color: var(--color-brand);
+    @include focus-ring;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.auth-form {
+  &__submit {
+    width: 100%;
+    margin-top: $space-2;
+    padding-block: $space-3;
+  }
+}

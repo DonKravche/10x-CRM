@@ -16,10 +16,12 @@
 @use "components/toast";
 @use "components/modal";
 
-// Layout and page partials are @use'd here as they're built:
-// @use "layout/auth";
-// @use "layout/app";
-// @use "layout/sidebar";
+// Layout
+@use "layout/auth";
+@use "layout/app";
+@use "layout/sidebar";
+
+// Page partials are @use'd here as they're built:
 // @use "pages/dashboard";
 // @use "pages/clients";
 // @use "pages/profile";
