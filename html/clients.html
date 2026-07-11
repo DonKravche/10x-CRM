@@ -19,15 +19,28 @@
 
       <a href="dashboard.html" class="sidebar__logo">10X CRM</a>
 
-      <nav class="sidebar__nav" aria-label="Main navigation">
-        <a href="dashboard.html" class="sidebar__link">Dashboard</a>
-        <a href="clients.html" class="sidebar__link sidebar__link--active" aria-current="page">Clients</a>
-        <a href="profile.html" class="sidebar__link">Profile</a>
-      </nav>
+      <!-- CSS-only burger: the checkbox is the open/closed state, no JS needed -->
+      <input type="checkbox" id="nav-toggle" class="sidebar__toggle">
+      <label class="sidebar__burger" for="nav-toggle" aria-label="Toggle navigation">
+        <span class="sidebar__burger-line"></span>
+        <span class="sidebar__burger-line"></span>
+        <span class="sidebar__burger-line"></span>
+      </label>
+      <label class="sidebar__scrim" for="nav-toggle" aria-hidden="true"></label>
 
-      <div class="sidebar__footer">
-        <button class="sidebar__action" type="button" id="theme-toggle-btn" aria-pressed="false">Toggle theme</button>
-        <button class="sidebar__action sidebar__action--logout" type="button" id="logout-btn">Log out</button>
+      <div class="sidebar__drawer">
+
+        <nav class="sidebar__nav" aria-label="Main navigation">
+          <a href="dashboard.html" class="sidebar__link">Dashboard</a>
+          <a href="clients.html" class="sidebar__link sidebar__link--active" aria-current="page">Clients</a>
+          <a href="profile.html" class="sidebar__link">Profile</a>
+        </nav>
+
+        <div class="sidebar__footer">
+          <button class="sidebar__action" type="button" id="theme-toggle-btn" aria-pressed="false">Toggle theme</button>
+          <button class="sidebar__action sidebar__action--logout" type="button" id="logout-btn">Log out</button>
+        </div>
+
       </div>
 
     </aside>
