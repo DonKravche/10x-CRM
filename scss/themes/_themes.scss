@@ -1,0 +1,68 @@
+// ==========================================================================
+// Themable colors as CSS custom properties.
+// Light is the default. #theme-toggle-btn JS switches themes by setting
+// data-theme="dark" on <html> — no other CSS hooks needed.
+// ==========================================================================
+
+:root {
+  // Neutrals — cool porcelain, deep blue-slate ink
+  --color-canvas: #eef2f3;
+  --color-surface: #ffffff;
+  --color-ink: #1d2a32;
+  --color-ink-muted: #5c6f7a;
+  --color-line: #d8e0e4;
+
+  // Brand — deep ledger green
+  --color-brand: #0c6b58;
+  --color-brand-strong: #084d3f;
+  --color-brand-tint: #e0efeb;
+  --color-on-brand: #ffffff;
+
+  // Danger — clay (shared hue with the Lost pipeline state, on purpose)
+  --color-danger: #b04a3e;
+  --color-danger-strong: #8f3a30;
+  --color-danger-tint: #f6e7e5;
+
+  // Pipeline status hues — the app's working palette
+  --color-lead: #3d6bd8;
+  --color-lead-tint: #e6ecfa;
+  --color-contacted: #a06a12;
+  --color-contacted-tint: #f7eeda;
+  --color-won: #147a54;
+  --color-won-tint: #e0f0e9;
+  --color-lost: #b04a3e;
+  --color-lost-tint: #f6e7e5;
+
+  // Elevation
+  --shadow-card: 0 1px 2px rgba(29, 42, 50, 0.06), 0 4px 12px rgba(29, 42, 50, 0.06);
+  --shadow-modal: 0 8px 40px rgba(29, 42, 50, 0.25);
+}
+
+[data-theme="dark"] {
+  --color-canvas: #0f171c;
+  --color-surface: #17222a;
+  --color-ink: #e3ecf0;
+  --color-ink-muted: #93a6b0;
+  --color-line: #2b3a44;
+
+  --color-brand: #2fae8c;
+  --color-brand-strong: #3cc29e;
+  --color-brand-tint: #16342c;
+  --color-on-brand: #0c1f1a;
+
+  --color-danger: #d4705f;
+  --color-danger-strong: #e08a7b;
+  --color-danger-tint: #3a231f;
+
+  --color-lead: #7d9ff0;
+  --color-lead-tint: #1c2740;
+  --color-contacted: #d9a04a;
+  --color-contacted-tint: #33280f;
+  --color-won: #4cc08f;
+  --color-won-tint: #143026;
+  --color-lost: #d4705f;
+  --color-lost-tint: #3a231f;
+
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.4), 0 4px 12px rgba(0, 0, 0, 0.3);
+  --shadow-modal: 0 8px 40px rgba(0, 0, 0, 0.6);
+}
