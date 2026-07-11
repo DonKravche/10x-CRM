@@ -1,0 +1,46 @@
+@use "../abstracts/variables" as *;
+@use "../abstracts/mixins" as *;
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: $space-2;
+  padding: $space-2 $space-4;
+  border-radius: $radius-md;
+  font-weight: 600;
+  font-size: $text-sm;
+  line-height: 1.4;
+  transition: background-color $speed-fast $ease-out, color $speed-fast $ease-out, border-color $speed-fast $ease-out;
+  @include focus-ring;
+
+  &--primary {
+    background-color: var(--color-brand);
+    color: var(--color-on-brand);
+
+    &:hover {
+      background-color: var(--color-brand-strong);
+    }
+  }
+
+  &--danger {
+    background-color: var(--color-danger-tint);
+    color: var(--color-danger);
+
+    &:hover {
+      background-color: var(--color-danger);
+      color: var(--color-surface);
+    }
+  }
+
+  &--ghost {
+    background-color: transparent;
+    border: 1px solid var(--color-line);
+    color: var(--color-ink-muted);
+
+    &:hover {
+      border-color: var(--color-ink-muted);
+      color: var(--color-ink);
+    }
+  }
+}

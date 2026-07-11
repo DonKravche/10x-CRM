@@ -1,0 +1,47 @@
+@use "../abstracts/variables" as *;
+
+// Pipeline status badge. Modifiers map 1:1 to the pipeline hue tokens;
+// JS changes status by swapping a single modifier class.
+.status-badge {
+  --badge-color: var(--color-ink-muted);
+  --badge-tint: var(--color-canvas);
+
+  display: inline-flex;
+  align-items: center;
+  gap: $space-1;
+  padding: 0.125rem $space-2;
+  border-radius: $radius-pill;
+  font-size: $text-xs;
+  font-weight: 600;
+  color: var(--badge-color);
+  background-color: var(--badge-tint);
+
+  // Leading status dot — the badge's version of the status spine
+  &::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: var(--badge-color);
+  }
+
+  &--lead {
+    --badge-color: var(--color-lead);
+    --badge-tint: var(--color-lead-tint);
+  }
+
+  &--contacted {
+    --badge-color: var(--color-contacted);
+    --badge-tint: var(--color-contacted-tint);
+  }
+
+  &--won {
+    --badge-color: var(--color-won);
+    --badge-tint: var(--color-won-tint);
+  }
+
+  &--lost {
+    --badge-color: var(--color-lost);
+    --badge-tint: var(--color-lost-tint);
+  }
+}

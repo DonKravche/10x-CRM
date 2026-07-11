@@ -1,0 +1,32 @@
+@use "../abstracts/variables" as *;
+
+// Global notice. JS sets the message, removes .hidden, and adds
+// .toast--success or .toast--error for the contextual spine color.
+.toast {
+  position: fixed;
+  inset-inline: $space-4;
+  bottom: $space-4;
+  z-index: $z-toast;
+  padding: $space-3 $space-4;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-left: $spine-width solid var(--color-ink-muted);
+  border-radius: $radius-md;
+  box-shadow: var(--shadow-modal);
+  font-size: $text-sm;
+  font-weight: 500;
+
+  @media (min-width: $bp-md) {
+    inset-inline: auto $space-5;
+    bottom: $space-5;
+    max-width: 22rem;
+  }
+
+  &--success {
+    border-left-color: var(--color-won);
+  }
+
+  &--error {
+    border-left-color: var(--color-danger);
+  }
+}

@@ -1,0 +1,76 @@
+@use "../abstracts/variables" as *;
+@use "../abstracts/mixins" as *;
+
+// Overlay pattern: .modal is the backdrop, .modal__dialog the sheet.
+// Mobile-first: bottom sheet on phones, centered dialog from $bp-sm up.
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: $z-modal;
+  display: grid;
+  align-items: end;
+  justify-items: center;
+  background-color: rgba(15, 23, 28, 0.55);
+
+  @include respond($bp-sm) {
+    align-items: center;
+    padding: $space-4;
+  }
+
+  &__dialog {
+    @include surface;
+    width: 100%;
+    max-width: 30rem;
+    max-height: 88vh;
+    display: flex;
+    flex-direction: column;
+    border-radius: $radius-lg $radius-lg 0 0;
+
+    @include respond($bp-sm) {
+      border-radius: $radius-lg;
+    }
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: $space-3;
+    padding: $space-4 $space-5;
+    border-bottom: 1px solid var(--color-line);
+  }
+
+  &__title {
+    font-size: $text-md;
+  }
+
+  &__close {
+    font-size: $text-lg;
+    line-height: 1;
+    color: var(--color-ink-muted);
+    transition: color $speed-fast $ease-out;
+    @include focus-ring;
+
+    &:hover {
+      color: var(--color-ink);
+    }
+  }
+
+  &__body {
+    padding: $space-5;
+    overflow-y: auto;
+  }
+
+  &__footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: $space-2;
+    padding: $space-4 $space-5;
+    border-top: 1px solid var(--color-line);
+  }
+
+  // The Add Client form is the modal body itself — its footer sits inside
+  form .modal__footer {
+    margin: $space-4 (-$space-5) (-$space-5);
+  }
+}
