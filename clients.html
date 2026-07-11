@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="10X CRM clients — search, filter, and manage every client in your pipeline.">
+  <title>Clients — 10X CRM</title>
+  <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+
+  <div class="app-layout">
+
+    <!-- ===== Sidebar (identical shell on all protected pages) ===== -->
+    <aside class="sidebar">
+
+      <a href="dashboard.html" class="sidebar__logo">10X CRM</a>
+
+      <nav class="sidebar__nav" aria-label="Main navigation">
+        <a href="dashboard.html" class="sidebar__link">Dashboard</a>
+        <a href="clients.html" class="sidebar__link sidebar__link--active" aria-current="page">Clients</a>
+        <a href="profile.html" class="sidebar__link">Profile</a>
+      </nav>
+
+      <div class="sidebar__footer">
+        <button class="sidebar__action" type="button" id="theme-toggle-btn" aria-pressed="false">Toggle theme</button>
+        <button class="sidebar__action sidebar__action--logout" type="button" id="logout-btn">Log out</button>
+      </div>
+
+    </aside>
+
+    <!-- ===== Main workspace ===== -->
+    <main class="workspace">
+
+      <!-- Page toolbar: title + primary action -->
+      <header class="page-toolbar">
+        <h1 class="page-toolbar__title">Clients</h1>
+        <button class="btn btn--primary" type="button" id="add-client-btn">Add Client</button>
+      </header>
+
+      <!-- Filter / sort panel -->
+      <section class="toolbar-filters" aria-label="Search, filter, and sort clients">
+
+        <div class="toolbar-filters__search">
+          <input
+            class="toolbar-filters__search-input"
+            type="search"
+            id="search-input"
+            placeholder="Search by name, company, or email"
+            aria-label="Search clients"
+          >
+        </div>
+
+        <div class="toolbar-filters__chips" role="group" aria-label="Filter by status">
+          <button class="filter-chip filter-chip--active" type="button" data-filter="all">All</button>
+          <button class="filter-chip" type="button" data-filter="lead">Lead</button>
+          <button class="filter-chip" type="button" data-filter="contacted">Contacted</button>
+          <button class="filter-chip" type="button" data-filter="won">Won</button>
+          <button class="filter-chip" type="button" data-filter="lost">Lost</button>
+        </div>
+
+        <div class="toolbar-filters__sort">
+          <label class="toolbar-filters__sort-label" for="sort-select">Sort by</label>
+          <select class="toolbar-filters__sort-select" id="sort-select">
+            <option value="date-desc">Newest first</option>
+            <option value="date-asc">Oldest first</option>
+            <option value="name-asc">Name A–Z</option>
+            <option value="name-desc">Name Z–A</option>
+            <option value="value-desc">Deal value: high to low</option>
+          </select>
+        </div>
+
+      </section>
+
+      <!-- Async state placeholders -->
+      <p class="loading-indicator hidden" id="loading-indicator" role="status">Loading clients…</p>
+      <p class="empty-state hidden" id="no-clients-msg">No clients found. Add your first client to get started.</p>
+
+      <!-- JS injection target for client cards -->
+      <section class="clients-grid" id="clients-container" aria-label="Client list"></section>
+
+    </main>
+
+  </div>
+
+  <!-- ===== Client card template (inert — cloned by JS into #clients-container) ===== -->
+  <template id="client-card-template">
+    <article class="client-card">
+
+      <header class="client-card__header">
+        <span class="client-card__avatar" aria-hidden="true">AB</span>
+        <div class="client-card__identity">
+          <h3 class="client-card__name">Client Name</h3>
+          <p class="client-card__company">Company</p>
+        </div>
+        <span class="status-badge status-badge--lead">Lead</span>
+      </header>
+
+      <div class="client-card__body">
+        <p class="client-card__email">email@company.com</p>
+        <p class="client-card__deal-value">$0</p>
+      </div>
+
+      <footer class="client-card__actions">
+        <select class="client-card__status-select" data-action="change-status" aria-label="Change status">
+          <option value="lead">Lead</option>
+          <option value="contacted">Contacted</option>
+          <option value="won">Won</option>
+          <option value="lost">Lost</option>
+        </select>
+        <button class="btn btn--ghost" type="button" data-action="view-details">Details</button>
+        <button class="btn btn--danger" type="button" data-action="delete-client">Delete</button>
+      </footer>
+
+    </article>
+  </template>
+
+  <!-- ===== Add Client modal ===== -->
+  <div class="modal hidden" id="add-client-modal">
+    <div class="modal__dialog" role="dialog" aria-modal="true" aria-labelledby="add-client-title">
+
+      <header class="modal__header">
+        <h2 class="modal__title" id="add-client-title">Add Client</h2>
+        <button class="modal__close" type="button" data-action="close-modal" aria-label="Close dialog">&times;</button>
+      </header>
+
+      <form class="modal__body" id="add-client-form" novalidate>
+
+        <div class="form-field">
+          <label class="form-field__label" for="client-name">Name</label>
+          <input class="form-field__input" type="text" id="client-name" name="name" placeholder="Client name">
+          <span class="field-error-msg hidden" id="client-name-error" aria-live="polite"></span>
+        </div>
+
+        <div class="form-field">
+          <label class="form-field__label" for="client-company">Company</label>
+          <input class="form-field__input" type="text" id="client-company" name="company" placeholder="Company name">
+          <span class="field-error-msg hidden" id="client-company-error" aria-live="polite"></span>
+        </div>
+
+        <div class="form-field">
+          <label class="form-field__label" for="client-email">Email</label>
+          <input class="form-field__input" type="email" id="client-email" name="email" placeholder="client@company.com">
+          <span class="field-error-msg hidden" id="client-email-error" aria-live="polite"></span>
+        </div>
+
+        <div class="form-field">
+          <label class="form-field__label" for="client-status">Status</label>
+          <select class="form-field__input" id="client-status" name="status">
+            <option value="lead">Lead</option>
+            <option value="contacted">Contacted</option>
+            <option value="won">Won</option>
+            <option value="lost">Lost</option>
+          </select>
+          <span class="field-error-msg hidden" id="client-status-error" aria-live="polite"></span>
+        </div>
+
+        <div class="form-field">
+          <label class="form-field__label" for="client-deal-value">Deal Value</label>
+          <input class="form-field__input" type="number" id="client-deal-value" name="deal-value" placeholder="0" min="0" step="100">
+          <span class="field-error-msg hidden" id="client-deal-value-error" aria-live="polite"></span>
+        </div>
+
+        <footer class="modal__footer">
+          <button class="btn btn--ghost" type="button" data-action="close-modal">Cancel</button>
+          <button class="btn btn--primary" type="submit">Add Client</button>
+        </footer>
+
+      </form>
+
+    </div>
+  </div>
+
+  <!-- ===== Client Details modal ===== -->
+  <div class="modal hidden" id="client-details-modal">
+    <div class="modal__dialog" role="dialog" aria-modal="true" aria-labelledby="client-details-title">
+
+      <header class="modal__header">
+        <h2 class="modal__title" id="client-details-title">Client Details</h2>
+        <button class="modal__close" type="button" data-action="close-modal" aria-label="Close dialog">&times;</button>
+      </header>
+
+      <div class="modal__body">
+
+        <!-- Identity + context -->
+        <section class="client-details" aria-label="Client information">
+          <span class="client-details__avatar" aria-hidden="true" id="details-avatar">AB</span>
+          <h3 class="client-details__name" id="details-name">Client Name</h3>
+          <p class="client-details__company" id="details-company">Company</p>
+          <p class="client-details__email" id="details-email">email@company.com</p>
+          <p class="client-details__deal-value" id="details-deal-value">$0</p>
+          <span class="status-badge status-badge--lead" id="details-status">Lead</span>
+
+          <dl class="client-details__timestamps">
+            <div class="client-details__timestamp">
+              <dt>Created</dt>
+              <dd id="details-created">—</dd>
+            </div>
+            <div class="client-details__timestamp">
+              <dt>Last updated</dt>
+              <dd id="details-updated">—</dd>
+            </div>
+          </dl>
+        </section>
+
+        <!-- Notes log (rendered by JS loop) -->
+        <section class="client-notes" aria-labelledby="client-notes-title">
+          <h4 class="client-notes__title" id="client-notes-title">Notes</h4>
+          <ul class="client-notes__list" id="notes-list"></ul>
+          <p class="empty-state hidden" id="no-notes-msg">No notes yet. Add the first one below.</p>
+
+          <form class="client-notes__form" id="add-note-form">
+            <input
+              class="client-notes__input"
+              type="text"
+              id="note-input"
+              placeholder="Write a note…"
+              aria-label="New note"
+            >
+            <button class="btn btn--primary" type="submit" id="add-note-btn">Add Note</button>
+          </form>
+        </section>
+
+      </div>
+
+      <footer class="modal__footer">
+        <button class="btn btn--ghost" type="button" id="set-reminder-btn">Set Reminder</button>
+      </footer>
+
+    </div>
+  </div>
+
+  <!-- Global toast notification (protected zone only) -->
+  <div class="toast hidden" id="toast-notification" role="status" aria-live="polite">
+    <span class="toast__message"></span>
+  </div>
+
+  <!-- JS logic added later: <script src="js/clients.js" defer></script> -->
+
+</body>
+</html>
