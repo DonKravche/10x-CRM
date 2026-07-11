@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="10X CRM dashboard — your pipeline, stats, and recent clients at a glance.">
+  <title>Dashboard — 10X CRM</title>
+  <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+
+  <div class="app-layout">
+
+    <!-- ===== Sidebar (identical shell on all protected pages) ===== -->
+    <aside class="sidebar">
+
+      <a href="dashboard.html" class="sidebar__logo">10X CRM</a>
+
+      <nav class="sidebar__nav" aria-label="Main navigation">
+        <a href="dashboard.html" class="sidebar__link sidebar__link--active" aria-current="page">Dashboard</a>
+        <a href="clients.html" class="sidebar__link">Clients</a>
+        <a href="profile.html" class="sidebar__link">Profile</a>
+      </nav>
+
+      <div class="sidebar__footer">
+        <button class="sidebar__action" type="button" id="theme-toggle-btn" aria-pressed="false">Toggle theme</button>
+        <button class="sidebar__action sidebar__action--logout" type="button" id="logout-btn">Log out</button>
+      </div>
+
+    </aside>
+
+    <!-- ===== Main workspace ===== -->
+    <main class="workspace">
+
+      <!-- Welcome banner + live clock -->
+      <header class="welcome-banner">
+        <div class="welcome-banner__text">
+          <h1 class="welcome-banner__title">Welcome back, <span id="welcome-name">User</span>!</h1>
+          <p class="welcome-banner__subtitle">Here's what's happening in your pipeline today.</p>
+        </div>
+        <time class="welcome-banner__clock" id="live-clock">00:00:00</time>
+      </header>
+
+      <!-- Stat cards -->
+      <section class="stats-grid" aria-label="Key metrics">
+
+        <article class="stat-card">
+          <p class="stat-card__label">Total Clients</p>
+          <p class="stat-card__value" id="stat-total-clients">0</p>
+        </article>
+
+        <article class="stat-card">
+          <p class="stat-card__label">Active Deals</p>
+          <p class="stat-card__value" id="stat-active-deals">0</p>
+        </article>
+
+        <article class="stat-card">
+          <p class="stat-card__label">Won Revenue</p>
+          <p class="stat-card__value" id="stat-won-revenue">$0</p>
+        </article>
+
+        <article class="stat-card">
+          <p class="stat-card__label">New This Week</p>
+          <p class="stat-card__value" id="stat-new-week">0</p>
+        </article>
+
+      </section>
+
+      <!-- Pipeline funnel -->
+      <section class="pipeline-overview" aria-labelledby="pipeline-title">
+
+        <h2 class="pipeline-overview__title" id="pipeline-title">Pipeline</h2>
+
+        <div class="pipeline-overview__stages">
+
+          <article class="pipeline-stage pipeline-stage--lead">
+            <p class="pipeline-stage__label">Lead</p>
+            <p class="pipeline-stage__count" id="pipeline-lead-count">0</p>
+            <div class="pipeline-stage__bar" aria-hidden="true"></div>
+          </article>
+
+          <article class="pipeline-stage pipeline-stage--contacted">
+            <p class="pipeline-stage__label">Contacted</p>
+            <p class="pipeline-stage__count" id="pipeline-contacted-count">0</p>
+            <div class="pipeline-stage__bar" aria-hidden="true"></div>
+          </article>
+
+          <article class="pipeline-stage pipeline-stage--won">
+            <p class="pipeline-stage__label">Won</p>
+            <p class="pipeline-stage__count" id="pipeline-won-count">0</p>
+            <div class="pipeline-stage__bar" aria-hidden="true"></div>
+          </article>
+
+          <article class="pipeline-stage pipeline-stage--lost">
+            <p class="pipeline-stage__label">Lost</p>
+            <p class="pipeline-stage__count" id="pipeline-lost-count">0</p>
+            <div class="pipeline-stage__bar" aria-hidden="true"></div>
+          </article>
+
+        </div>
+
+      </section>
+
+      <!-- Recent clients -->
+      <section class="recent-clients" aria-labelledby="recent-clients-title">
+
+        <header class="recent-clients__header">
+          <h2 class="recent-clients__title" id="recent-clients-title">Recent Clients</h2>
+          <a class="recent-clients__view-all" href="clients.html">View all clients</a>
+        </header>
+
+        <div class="recent-clients__table-wrap">
+          <table class="data-table">
+            <thead class="data-table__head">
+              <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Company</th>
+                <th scope="col">Status</th>
+                <th scope="col">Date Added</th>
+              </tr>
+            </thead>
+            <tbody class="data-table__body" id="recent-clients-body">
+              <tr>
+                <td>Jane Cooper</td>
+                <td>Acme Inc.</td>
+                <td><span class="status-badge status-badge--won">Won</span></td>
+                <td>Jul 10, 2026</td>
+              </tr>
+              <tr>
+                <td>Devon Lane</td>
+                <td>Globex</td>
+                <td><span class="status-badge status-badge--lead">Lead</span></td>
+                <td>Jul 9, 2026</td>
+              </tr>
+              <tr>
+                <td>Esther Howard</td>
+                <td>Initech</td>
+                <td><span class="status-badge status-badge--contacted">Contacted</span></td>
+                <td>Jul 8, 2026</td>
+              </tr>
+              <tr>
+                <td>Cameron Wilson</td>
+                <td>Umbrella Co.</td>
+                <td><span class="status-badge status-badge--lost">Lost</span></td>
+                <td>Jul 7, 2026</td>
+              </tr>
+              <tr>
+                <td>Leslie Alexander</td>
+                <td>Stark Industries</td>
+                <td><span class="status-badge status-badge--contacted">Contacted</span></td>
+                <td>Jul 5, 2026</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </section>
+
+    </main>
+
+  </div>
+
+  <!-- Global toast notification (protected zone only) -->
+  <div class="toast hidden" id="toast-notification" role="status" aria-live="polite">
+    <span class="toast__message"></span>
+  </div>
+
+  <!-- JS logic added later: <script src="js/dashboard.js" defer></script> -->
+
+</body>
+</html>
