@@ -21,7 +21,7 @@
 @use "layout/app";
 @use "layout/sidebar";
 
-// Page partials are @use'd here as they're built:
-// @use "pages/dashboard";
-// @use "pages/clients";
-// @use "pages/profile";
+// Pages
+@use "pages/dashboard";
+@use "pages/clients";
+@use "pages/profile";

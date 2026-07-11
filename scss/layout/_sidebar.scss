@@ -1,14 +1,18 @@
 @use "../abstracts/variables" as *;
 @use "../abstracts/mixins" as *;
 
-// Mobile-first: sticky top bar with horizontal nav.
-// From $bp-md: full-height left rail; footer actions pushed to the bottom.
+// Mobile-first: sticky top bar with a CSS-only off-canvas burger drawer.
+// The visually-hidden checkbox (.sidebar__toggle) holds the open/closed
+// state — no JS involved. From $bp-md the drawer machinery disappears and
+// the same markup becomes a full-height left rail (.sidebar__drawer
+// collapses via display: contents so nav + footer join the rail column).
 .sidebar {
   position: sticky;
   top: 0;
   z-index: $z-sidebar;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: $space-4;
   padding: $space-3 $space-4;
   background-color: var(--color-surface);
@@ -17,6 +21,7 @@
   @include respond($bp-md) {
     flex-direction: column;
     align-items: stretch;
+    justify-content: flex-start;
     gap: $space-2;
     height: 100vh;
     padding: $space-5 $space-3;
@@ -38,15 +43,110 @@
     }
   }
 
-  &__nav {
-    display: flex;
-    gap: $space-1;
-    overflow-x: auto;
+  // --- Burger machinery (mobile only) ---
+
+  &__toggle {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+
+    // Keyboard focus lands on the hidden checkbox — ring the burger instead
+    &:focus-visible ~ .sidebar__burger {
+      outline: 2px solid var(--color-brand);
+      outline-offset: 2px;
+    }
 
     @include respond($bp-md) {
-      flex-direction: column;
-      overflow-x: visible;
+      display: none;
     }
+  }
+
+  &__burger {
+    position: relative;
+    z-index: 3; // stays above scrim and drawer so the ✕ can close the menu
+    display: grid;
+    gap: 4px;
+    padding: $space-2;
+    border-radius: $radius-sm;
+    cursor: pointer;
+
+    @include respond($bp-md) {
+      display: none;
+    }
+  }
+
+  &__burger-line {
+    width: 1.125rem;
+    height: 2px;
+    border-radius: 1px;
+    background-color: var(--color-ink);
+    transition: transform $speed-base $ease-out, opacity $speed-fast $ease-out;
+  }
+
+  // Burger morphs into an ✕ while open (line centers sit 6px apart)
+  &__toggle:checked ~ &__burger &__burger-line:nth-child(1) {
+    transform: translateY(6px) rotate(45deg);
+  }
+
+  &__toggle:checked ~ &__burger &__burger-line:nth-child(2) {
+    opacity: 0;
+  }
+
+  &__toggle:checked ~ &__burger &__burger-line:nth-child(3) {
+    transform: translateY(-6px) rotate(-45deg);
+  }
+
+  &__scrim {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    background-color: rgba(15, 23, 28, 0.45);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity $speed-base $ease-out;
+
+    @include respond($bp-md) {
+      display: none;
+    }
+  }
+
+  &__toggle:checked ~ &__scrim {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  &__drawer {
+    position: fixed;
+    inset-block: 0;
+    left: 0;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    width: min(80vw, 17rem);
+    padding: $space-5 $space-3;
+    background-color: var(--color-surface);
+    transform: translateX(-100%);
+    transition: transform $speed-base $ease-out;
+
+    @include respond($bp-md) {
+      display: contents; // desktop: children join the rail column directly
+    }
+  }
+
+  &__toggle:checked ~ &__drawer {
+    transform: none;
+    box-shadow: var(--shadow-modal);
+  }
+
+  // --- Navigation (drawer content on mobile, rail content on desktop) ---
+
+  &__nav {
+    display: flex;
+    flex-direction: column;
+    gap: $space-1;
   }
 
   &__link {
@@ -75,18 +175,11 @@
 
   &__footer {
     display: flex;
-    align-items: center;
-    gap: $space-2;
-    margin-left: auto;
-
-    @include respond($bp-md) {
-      flex-direction: column;
-      align-items: stretch;
-      margin-left: 0;
-      margin-top: auto;
-      padding-top: $space-4;
-      border-top: 1px solid var(--color-line);
-    }
+    flex-direction: column;
+    gap: $space-1;
+    margin-top: auto;
+    padding-top: $space-4;
+    border-top: 1px solid var(--color-line);
   }
 
   &__action {
@@ -110,4 +203,9 @@
       background-color: var(--color-danger-tint);
     }
   }
+}
+
+// Lock page scroll while the drawer is open
+body:has(.sidebar__toggle:checked) {
+  overflow: hidden;
 }
