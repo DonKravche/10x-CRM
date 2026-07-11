@@ -1,0 +1,200 @@
+@use "../abstracts/variables" as *;
+@use "../abstracts/mixins" as *;
+
+// --- Welcome banner + live clock ---
+.welcome-banner {
+  display: flex;
+  flex-direction: column;
+  gap: $space-3;
+  margin-bottom: $space-5;
+
+  @include respond($bp-sm) {
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+
+  &__title {
+    font-size: $text-xl;
+
+    @include respond($bp-md) {
+      font-size: $text-2xl;
+    }
+  }
+
+  &__subtitle {
+    margin-top: $space-1;
+    font-size: $text-sm;
+    color: var(--color-ink-muted);
+  }
+
+  &__clock {
+    align-self: flex-start;
+    padding: $space-1 $space-3;
+    border: 1px solid var(--color-line);
+    border-radius: $radius-sm;
+    background-color: var(--color-surface);
+    font-family: $font-mono;
+    font-size: $text-md;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+}
+
+// --- Stat cards ---
+.stats-grid {
+  display: grid;
+  gap: $space-3;
+  margin-bottom: $space-5;
+
+  @include respond($bp-sm) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include respond($bp-lg) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.stat-card {
+  @include surface;
+  padding: $space-4;
+
+  &__label {
+    font-size: $text-xs;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-ink-muted);
+  }
+
+  &__value {
+    margin-top: $space-2;
+    font-family: $font-mono;
+    font-size: $text-xl;
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+// --- Pipeline funnel ---
+.pipeline-overview {
+  @include surface;
+  padding: $space-4 $space-4 $space-5;
+  margin-bottom: $space-5;
+
+  &__title {
+    font-size: $text-md;
+    margin-bottom: $space-4;
+  }
+
+  &__stages {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: $space-3;
+
+    @include respond($bp-md) {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+}
+
+.pipeline-stage {
+  --stage-color: var(--color-ink-muted);
+  --stage-tint: var(--color-canvas);
+
+  padding: $space-3;
+  border-radius: $radius-sm;
+  border-left: $spine-width solid var(--stage-color);
+  background-color: var(--stage-tint);
+
+  &--lead {
+    --stage-color: var(--color-lead);
+    --stage-tint: var(--color-lead-tint);
+  }
+
+  &--contacted {
+    --stage-color: var(--color-contacted);
+    --stage-tint: var(--color-contacted-tint);
+  }
+
+  &--won {
+    --stage-color: var(--color-won);
+    --stage-tint: var(--color-won-tint);
+  }
+
+  &--lost {
+    --stage-color: var(--color-lost);
+    --stage-tint: var(--color-lost-tint);
+  }
+
+  &__label {
+    font-size: $text-sm;
+    font-weight: 600;
+    color: var(--stage-color);
+  }
+
+  &__count {
+    margin-top: $space-1;
+    font-family: $font-mono;
+    font-size: $text-lg;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+// --- Recent clients ---
+.recent-clients {
+  @include surface;
+  padding: $space-4;
+
+  &__header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: $space-3;
+    margin-bottom: $space-3;
+  }
+
+  &__title {
+    font-size: $text-md;
+  }
+
+  &__view-all {
+    font-size: $text-sm;
+    font-weight: 600;
+    color: var(--color-brand);
+    white-space: nowrap;
+    @include focus-ring;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  // Mobile table strategy: the wrapper scrolls, the page never does
+  &__table-wrap {
+    overflow-x: auto;
+  }
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: $text-sm;
+
+  th {
+    padding: $space-2 $space-3;
+    text-align: left;
+    font-size: $text-xs;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-ink-muted);
+  }
+
+  td {
+    padding: $space-3;
+    border-top: 1px solid var(--color-line);
+    white-space: nowrap;
+  }
+}
