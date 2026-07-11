@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Log in to 10X CRM — manage your clients and pipeline.">
+  <title>Log In — 10X CRM</title>
+  <link rel="stylesheet" href="css/main.css">
+</head>
+<body class="auth-page">
+
+  <main class="auth-container">
+
+    <section class="auth-card" aria-labelledby="auth-title">
+
+      <header class="auth-card__header">
+        <a href="index.html" class="auth-card__brand">10X CRM</a>
+        <h1 class="auth-card__title" id="auth-title">Welcome back</h1>
+        <p class="auth-card__subtitle">Log in to pick up where you left off.</p>
+      </header>
+
+      <form id="login-form" class="auth-form" novalidate>
+
+        <div class="form-field">
+          <label class="form-field__label" for="login-email">Email</label>
+          <input
+            class="form-field__input"
+            type="email"
+            id="login-email"
+            name="email"
+            placeholder="you@company.com"
+            autocomplete="email"
+          >
+          <span class="field-error-msg hidden" id="login-email-error" aria-live="polite"></span>
+        </div>
+
+        <div class="form-field">
+          <label class="form-field__label" for="login-password">Password</label>
+          <input
+            class="form-field__input"
+            type="password"
+            id="login-password"
+            name="password"
+            placeholder="Enter your password"
+            autocomplete="current-password"
+          >
+          <span class="field-error-msg hidden" id="login-password-error" aria-live="polite"></span>
+        </div>
+
+        <button class="btn btn--primary auth-form__submit" type="submit">Log In</button>
+
+      </form>
+
+      <p class="auth-card__redirect">
+        Don't have an account?
+        <a class="auth-card__link" href="signup.html">Sign up</a>
+      </p>
+
+    </section>
+
+  </main>
+
+  <!-- JS logic added later: <script src="js/auth.js" defer></script> -->
+
+</body>
+</html>
