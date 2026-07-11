@@ -8,12 +8,15 @@
 @use "base/typography";
 @use "base/utilities";
 
-// Components, layout, and page partials are @use'd here as they're built:
-// @use "components/buttons";
-// @use "components/forms";
-// @use "components/badges";
-// @use "components/toast";
-// @use "components/modal";
+// Components
+@use "components/buttons";
+@use "components/forms";
+@use "components/badges";
+@use "components/chips";
+@use "components/toast";
+@use "components/modal";
+
+// Layout and page partials are @use'd here as they're built:
 // @use "layout/auth";
 // @use "layout/app";
 // @use "layout/sidebar";
