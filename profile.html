@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="10X CRM profile — manage your account details, password, and data.">
+  <title>Profile — 10X CRM</title>
+  <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+
+  <div class="app-layout">
+
+    <!-- ===== Sidebar (identical shell on all protected pages) ===== -->
+    <aside class="sidebar">
+
+      <a href="dashboard.html" class="sidebar__logo">10X CRM</a>
+
+      <nav class="sidebar__nav" aria-label="Main navigation">
+        <a href="dashboard.html" class="sidebar__link">Dashboard</a>
+        <a href="clients.html" class="sidebar__link">Clients</a>
+        <a href="profile.html" class="sidebar__link sidebar__link--active" aria-current="page">Profile</a>
+      </nav>
+
+      <div class="sidebar__footer">
+        <button class="sidebar__action" type="button" id="theme-toggle-btn" aria-pressed="false">Toggle theme</button>
+        <button class="sidebar__action sidebar__action--logout" type="button" id="logout-btn">Log out</button>
+      </div>
+
+    </aside>
+
+    <!-- ===== Main workspace ===== -->
+    <main class="workspace">
+
+      <!-- Page toolbar: title -->
+      <header class="page-toolbar">
+        <h1 class="page-toolbar__title">Profile</h1>
+      </header>
+
+      <!-- Identity display shell -->
+      <section class="profile-info" aria-label="Account overview">
+
+        <span class="profile-info__avatar" aria-hidden="true" id="profile-avatar">AB</span>
+
+        <div class="profile-info__identity">
+          <h2 class="profile-info__name" id="profile-display-name">User Name</h2>
+          <p class="profile-info__email" id="profile-display-email">user@company.com</p>
+          <p class="profile-info__company" id="profile-display-company">Company</p>
+        </div>
+
+        <dl class="profile-info__dates">
+          <div class="profile-info__date">
+            <dt>Member since</dt>
+            <dd id="profile-member-since">—</dd>
+          </div>
+          <div class="profile-info__date">
+            <dt>Last updated</dt>
+            <dd id="profile-last-updated">—</dd>
+          </div>
+        </dl>
+
+      </section>
+
+      <!-- Edit profile form -->
+      <section class="profile-section" aria-labelledby="edit-profile-title">
+
+        <h2 class="profile-section__title" id="edit-profile-title">Edit Profile</h2>
+
+        <form class="profile-section__form" id="edit-profile-form" novalidate>
+
+          <div class="form-field">
+            <label class="form-field__label" for="profile-fullname">Full Name</label>
+            <input
+              class="form-field__input"
+              type="text"
+              id="profile-fullname"
+              name="fullname"
+              placeholder="Your full name"
+              autocomplete="name"
+            >
+            <span class="field-error-msg hidden" id="profile-fullname-error" aria-live="polite"></span>
+          </div>
+
+          <div class="form-field">
+            <label class="form-field__label" for="profile-email">Email</label>
+            <input
+              class="form-field__input"
+              type="email"
+              id="profile-email"
+              name="email"
+              placeholder="you@company.com"
+              autocomplete="email"
+            >
+            <span class="field-error-msg hidden" id="profile-email-error" aria-live="polite"></span>
+          </div>
+
+          <div class="form-field">
+            <label class="form-field__label" for="profile-company">Company</label>
+            <input
+              class="form-field__input"
+              type="text"
+              id="profile-company"
+              name="company"
+              placeholder="Company (optional)"
+              autocomplete="organization"
+            >
+            <span class="field-error-msg hidden" id="profile-company-error" aria-live="polite"></span>
+          </div>
+
+          <button class="btn btn--primary" type="submit">Save Changes</button>
+
+        </form>
+
+      </section>
+
+      <!-- Change password form -->
+      <section class="profile-section" aria-labelledby="change-password-title">
+
+        <h2 class="profile-section__title" id="change-password-title">Change Password</h2>
+
+        <form class="profile-section__form" id="change-password-form" novalidate>
+
+          <div class="form-field">
+            <label class="form-field__label" for="current-password">Current Password</label>
+            <input
+              class="form-field__input"
+              type="password"
+              id="current-password"
+              name="current-password"
+              placeholder="Enter your current password"
+              autocomplete="current-password"
+            >
+            <span class="field-error-msg hidden" id="current-password-error" aria-live="polite"></span>
+          </div>
+
+          <div class="form-field">
+            <label class="form-field__label" for="new-password">New Password</label>
+            <input
+              class="form-field__input"
+              type="password"
+              id="new-password"
+              name="new-password"
+              placeholder="Create a new password"
+              autocomplete="new-password"
+            >
+            <span class="field-error-msg hidden" id="new-password-error" aria-live="polite"></span>
+          </div>
+
+          <div class="form-field">
+            <label class="form-field__label" for="confirm-new-password">Confirm New Password</label>
+            <input
+              class="form-field__input"
+              type="password"
+              id="confirm-new-password"
+              name="confirm-new-password"
+              placeholder="Repeat your new password"
+              autocomplete="new-password"
+            >
+            <span class="field-error-msg hidden" id="confirm-new-password-error" aria-live="polite"></span>
+          </div>
+
+          <button class="btn btn--primary" type="submit">Update Password</button>
+
+        </form>
+
+      </section>
+
+      <!-- Danger zone -->
+      <section class="danger-zone" aria-labelledby="danger-zone-title">
+
+        <h2 class="danger-zone__title" id="danger-zone-title">Danger Zone</h2>
+        <p class="danger-zone__description">
+          Resetting deletes every client, note, and setting stored in this browser. This cannot be undone.
+        </p>
+        <button class="btn btn--danger" type="button" id="reset-data-btn">Reset All Data</button>
+
+      </section>
+
+    </main>
+
+  </div>
+
+  <!-- Global toast notification (protected zone only) -->
+  <div class="toast hidden" id="toast-notification" role="status" aria-live="polite">
+    <span class="toast__message"></span>
+  </div>
+
+  <!-- JS logic added later: <script src="js/profile.js" defer></script> -->
+
+</body>
+</html>
