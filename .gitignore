@@ -1,0 +1,8 @@
+# Dependencies
+node_modules/
+
+# Build artifacts
+*.css.map
+
+# Local study notes (kept out of the repo on purpose)
+STRUCTURAL-DECISIONS.md
