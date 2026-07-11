@@ -1,0 +1,19 @@
+// The JS ↔ CSS state contract: Vanilla JS toggles this single class to
+// show/hide errors, modals, toasts, and async placeholders.
+// !important is deliberate — state must beat any component display value.
+.hidden {
+  display: none !important;
+}
+
+// Present for screen readers, invisible on screen
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}

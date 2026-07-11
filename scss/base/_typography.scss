@@ -1,0 +1,19 @@
+@use "../abstracts/variables" as *;
+
+body {
+  font-family: $font-body;
+  font-size: $text-base;
+  line-height: 1.5;
+  color: var(--color-ink);
+  background-color: var(--color-canvas);
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: $font-display;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}

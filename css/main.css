@@ -1,0 +1,143 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  padding: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul[class],
+ol[class] {
+  padding: 0;
+  list-style: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+:root {
+  --color-canvas: #eef2f3;
+  --color-surface: #ffffff;
+  --color-ink: #1d2a32;
+  --color-ink-muted: #5c6f7a;
+  --color-line: #d8e0e4;
+  --color-brand: #0c6b58;
+  --color-brand-strong: #084d3f;
+  --color-brand-tint: #e0efeb;
+  --color-on-brand: #ffffff;
+  --color-danger: #b04a3e;
+  --color-danger-strong: #8f3a30;
+  --color-danger-tint: #f6e7e5;
+  --color-lead: #3d6bd8;
+  --color-lead-tint: #e6ecfa;
+  --color-contacted: #a06a12;
+  --color-contacted-tint: #f7eeda;
+  --color-won: #147a54;
+  --color-won-tint: #e0f0e9;
+  --color-lost: #b04a3e;
+  --color-lost-tint: #f6e7e5;
+  --shadow-card: 0 1px 2px rgba(29, 42, 50, 0.06), 0 4px 12px rgba(29, 42, 50, 0.06);
+  --shadow-modal: 0 8px 40px rgba(29, 42, 50, 0.25);
+}
+
+[data-theme=dark] {
+  --color-canvas: #0f171c;
+  --color-surface: #17222a;
+  --color-ink: #e3ecf0;
+  --color-ink-muted: #93a6b0;
+  --color-line: #2b3a44;
+  --color-brand: #2fae8c;
+  --color-brand-strong: #3cc29e;
+  --color-brand-tint: #16342c;
+  --color-on-brand: #0c1f1a;
+  --color-danger: #d4705f;
+  --color-danger-strong: #e08a7b;
+  --color-danger-tint: #3a231f;
+  --color-lead: #7d9ff0;
+  --color-lead-tint: #1c2740;
+  --color-contacted: #d9a04a;
+  --color-contacted-tint: #33280f;
+  --color-won: #4cc08f;
+  --color-won-tint: #143026;
+  --color-lost: #d4705f;
+  --color-lost-tint: #3a231f;
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.4), 0 4px 12px rgba(0, 0, 0, 0.3);
+  --shadow-modal: 0 8px 40px rgba(0, 0, 0, 0.6);
+}
+
+body {
+  font-family: "Public Sans", "Segoe UI", system-ui, sans-serif;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--color-ink);
+  background-color: var(--color-canvas);
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}

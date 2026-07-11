@@ -1,0 +1,22 @@
+// ==========================================================================
+// 10X CRM — entry point. Compiled to css/main.css (npm run build:css).
+// Load order matters: reset → theme tokens → base → components → layout → pages
+// ==========================================================================
+
+@use "base/reset";
+@use "themes/themes";
+@use "base/typography";
+@use "base/utilities";
+
+// Components, layout, and page partials are @use'd here as they're built:
+// @use "components/buttons";
+// @use "components/forms";
+// @use "components/badges";
+// @use "components/toast";
+// @use "components/modal";
+// @use "layout/auth";
+// @use "layout/app";
+// @use "layout/sidebar";
+// @use "pages/dashboard";
+// @use "pages/clients";
+// @use "pages/profile";

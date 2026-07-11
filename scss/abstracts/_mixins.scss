@@ -1,0 +1,25 @@
+@use "variables" as *;
+
+// Mobile-first: base styles are the mobile styles.
+// This mixin only ever widens — pass a $bp-* token.
+@mixin respond($breakpoint) {
+  @media (min-width: $breakpoint) {
+    @content;
+  }
+}
+
+// Visible keyboard focus that stays quiet for mouse users
+@mixin focus-ring {
+  &:focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 2px;
+  }
+}
+
+// Shared surface treatment for cards, modals, and panels
+@mixin surface {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-radius: $radius-lg;
+  box-shadow: var(--shadow-card);
+}
