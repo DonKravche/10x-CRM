@@ -1,0 +1,13 @@
+{
+  "name": "10x-crm",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Vanilla JS CRM with SCSS styling",
+  "scripts": {
+    "build:css": "sass scss/main.scss css/main.css --no-source-map",
+    "watch:css": "sass --watch scss/main.scss css/main.css"
+  },
+  "devDependencies": {
+    "sass": "^1.101.0"
+  }
+}
