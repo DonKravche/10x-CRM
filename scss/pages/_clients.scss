@@ -244,10 +244,15 @@
   }
 
   &__email,
+  &__phone,
   &__deal-value {
     grid-column: 1 / -1;
     margin-top: $space-2;
     font-size: $text-sm;
+  }
+
+  &__phone {
+    color: var(--color-ink-muted);
   }
 
   &__deal-value {
