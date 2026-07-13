@@ -1092,10 +1092,13 @@ body:has(.sidebar__toggle:checked) {
   font-size: 0.875rem;
   color: var(--color-ink-muted);
 }
-.client-details__email, .client-details__deal-value {
+.client-details__email, .client-details__phone, .client-details__deal-value {
   grid-column: 1/-1;
   margin-top: 0.5rem;
   font-size: 0.875rem;
+}
+.client-details__phone {
+  color: var(--color-ink-muted);
 }
 .client-details__deal-value {
   font-family: "Spline Sans Mono", Consolas, monospace;

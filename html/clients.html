@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,9 +8,12 @@
   <title>Clients — 10X CRM</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Public+Sans:wght@400;500;600&family=Spline+Sans+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Public+Sans:wght@400;500;600&family=Spline+Sans+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="../css/main.css">
 </head>
+
 <body>
 
   <div class="app-layout">
@@ -58,13 +62,8 @@
       <section class="toolbar-filters" aria-label="Search, filter, and sort clients">
 
         <div class="toolbar-filters__search">
-          <input
-            class="toolbar-filters__search-input"
-            type="search"
-            id="search-input"
-            placeholder="Search by name, company, or email"
-            aria-label="Search clients"
-          >
+          <input class="toolbar-filters__search-input" type="search" id="search-input"
+            placeholder="Search by name, company, or email" aria-label="Search clients">
         </div>
 
         <div class="toolbar-filters__chips" role="group" aria-label="Filter by status">
@@ -149,15 +148,29 @@
         </div>
 
         <div class="form-field">
+          <label class="form-field__label" for="client-email">Email</label>
+          <input class="form-field__input" type="email" id="client-email" name="email" placeholder="client@company.com">
+          <span class="field-error-msg hidden" id="client-email-error" aria-live="polite"></span>
+        </div>
+
+        <div class="form-field">
+          <label class="form-field__label" for="client-phone">Phone</label>
+          <input class="form-field__input" type="tel" id="client-phone" name="phone" placeholder="Phone (optional)">
+          <span class="field-error-msg hidden" id="client-phone-error" aria-live="polite"></span>
+        </div>
+
+        <div class="form-field">
           <label class="form-field__label" for="client-company">Company</label>
-          <input class="form-field__input" type="text" id="client-company" name="company" placeholder="Company name">
+          <input class="form-field__input" type="text" id="client-company" name="company"
+            placeholder="Company (optional)">
           <span class="field-error-msg hidden" id="client-company-error" aria-live="polite"></span>
         </div>
 
         <div class="form-field">
-          <label class="form-field__label" for="client-email">Email</label>
-          <input class="form-field__input" type="email" id="client-email" name="email" placeholder="client@company.com">
-          <span class="field-error-msg hidden" id="client-email-error" aria-live="polite"></span>
+          <label class="form-field__label" for="client-deal-value">Deal Value</label>
+          <input class="form-field__input" type="number" id="client-deal-value" name="deal-value" placeholder="0"
+            min="0" step="100">
+          <span class="field-error-msg hidden" id="client-deal-value-error" aria-live="polite"></span>
         </div>
 
         <div class="form-field">
@@ -169,12 +182,6 @@
             <option value="lost">Lost</option>
           </select>
           <span class="field-error-msg hidden" id="client-status-error" aria-live="polite"></span>
-        </div>
-
-        <div class="form-field">
-          <label class="form-field__label" for="client-deal-value">Deal Value</label>
-          <input class="form-field__input" type="number" id="client-deal-value" name="deal-value" placeholder="0" min="0" step="100">
-          <span class="field-error-msg hidden" id="client-deal-value-error" aria-live="polite"></span>
         </div>
 
         <footer class="modal__footer">
@@ -204,6 +211,7 @@
           <h3 class="client-details__name" id="details-name">Client Name</h3>
           <p class="client-details__company" id="details-company">Company</p>
           <p class="client-details__email" id="details-email">email@company.com</p>
+          <p class="client-details__phone" id="details-phone">—</p>
           <p class="client-details__deal-value" id="details-deal-value">$0</p>
           <span class="status-badge status-badge--lead" id="details-status">Lead</span>
 
@@ -226,13 +234,8 @@
           <p class="empty-state hidden" id="no-notes-msg">No notes yet. Add the first one below.</p>
 
           <form class="client-notes__form" id="add-note-form">
-            <input
-              class="client-notes__input"
-              type="text"
-              id="note-input"
-              placeholder="Write a note…"
-              aria-label="New note"
-            >
+            <input class="client-notes__input" type="text" id="note-input" placeholder="Write a note…"
+              aria-label="New note">
             <button class="btn btn--primary" type="submit" id="add-note-btn">Add Note</button>
           </form>
         </section>
@@ -240,7 +243,7 @@
       </div>
 
       <footer class="modal__footer">
-        <button class="btn btn--ghost" type="button" id="set-reminder-btn">Set Reminder</button>
+        <button class="btn btn--ghost" type="button" id="set-reminder-btn">Remind me in 1 min</button>
       </footer>
 
     </div>
@@ -251,7 +254,10 @@
     <span class="toast__message"></span>
   </div>
 
-  <!-- JS logic added later: <script src="../js/clients.js" defer></script> -->
-
+  <script src="../js/storage.js"></script>
+  <script src="../js/guard.js"></script>
+  <script src="../js/data.js"></script>
+  <script src="../js/clients.js"></script>
 </body>
+
 </html>
