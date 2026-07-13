@@ -139,10 +139,26 @@ function handleChangePasswordFormSubmit(submitEvent) {
     showToastMessage("Password changed ✓", "success");
 }
 
+async function handleResetDataClick() {
+    const userConfirmedReset = confirm(
+        "Reset all client data? This removes every client, note, and reminder stored in this browser. This cannot be undone."
+    );
+    if (!userConfirmedReset) {
+        return;
+    }
+
+    // crm_users and crm_session are untouched — only the client dataset resets.
+    removeStorageValue(STORAGE_KEYS.CLIENTS);
+    await loadClients();
+
+    showToastMessage("Client data has been reset", "success");
+}
+
 function initializeProfilePage() {
     displayProfileInfo();
     document.getElementById("edit-profile-form").addEventListener("submit", handleEditProfileFormSubmit);
     document.getElementById("change-password-form").addEventListener("submit", handleChangePasswordFormSubmit);
+    document.getElementById("reset-data-btn").addEventListener("click", handleResetDataClick);
 }
 
 initializeProfilePage();
