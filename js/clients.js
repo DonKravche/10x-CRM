@@ -335,6 +335,11 @@ function handleClientsContainerClick(clickEvent) {
 
     if (clickEvent.target.closest('[data-action="delete-client"]')) {
         handleDeleteClientClick(clientId);
+        return;
+    }
+
+    if (clickEvent.target.closest('[data-action="view-details"]')) {
+        openClientDetailsModal(clientId);
     }
 }
 
@@ -344,11 +349,107 @@ function setupClientCardActions() {
     clientsContainerElement.addEventListener("change", handleClientCardStatusChange);
 }
 
+let currentlyOpenClientId = null;
+
+function renderClientNotesList(notesList) {
+    const notesListElement = document.getElementById("notes-list");
+    const noNotesMessageElement = document.getElementById("no-notes-msg");
+
+    notesListElement.innerHTML = "";
+
+    if (notesList.length === 0) {
+        noNotesMessageElement.classList.remove("hidden");
+        return;
+    }
+    noNotesMessageElement.classList.add("hidden");
+
+    notesList.forEach(noteRecord => {
+        const noteListItemElement = document.createElement("li");
+        noteListItemElement.className = "client-notes__item";
+        noteListItemElement.textContent = `${noteRecord.text} — ${noteRecord.date}`;
+        notesListElement.appendChild(noteListItemElement);
+    });
+}
+
+function openClientDetailsModal(clientId) {
+    const clientRecord = findClientById(clientId);
+    if (!clientRecord) {
+        return;
+    }
+
+    currentlyOpenClientId = clientId;
+
+    document.getElementById("details-avatar").textContent = getClientInitials(clientRecord.name);
+    document.getElementById("details-name").textContent = clientRecord.name;
+    document.getElementById("details-company").textContent = clientRecord.company;
+    document.getElementById("details-email").textContent = clientRecord.email;
+    document.getElementById("details-phone").textContent = clientRecord.phone || "—";
+    document.getElementById("details-deal-value").textContent =
+        `$${clientRecord.dealValue.toLocaleString("en-US")}`;
+
+    const statusBadgeElement = document.getElementById("details-status");
+    statusBadgeElement.textContent = clientRecord.status;
+    statusBadgeElement.className = `status-badge status-badge--${clientRecord.status.toLowerCase()}`;
+
+    document.getElementById("details-created").textContent = new Date(clientRecord.createdAt).toLocaleDateString();
+    document.getElementById("details-updated").textContent = new Date(clientRecord.updatedAt).toLocaleDateString();
+
+    renderClientNotesList(clientRecord.notes);
+
+    openModal(document.getElementById("client-details-modal"));
+}
+
+function handleAddNoteFormSubmit(submitEvent) {
+    submitEvent.preventDefault();
+
+    const noteInputElement = document.getElementById("note-input");
+    const noteTextValue = noteInputElement.value.trim();
+    if (noteTextValue === "") {
+        return;
+    }
+
+    const clientRecord = findClientById(currentlyOpenClientId);
+    if (!clientRecord) {
+        return;
+    }
+
+    clientRecord.notes.push({ text: noteTextValue, date: new Date().toLocaleString() });
+    clientRecord.updatedAt = new Date().toISOString();
+    saveClients(allClientsList);
+
+    renderClientNotesList(clientRecord.notes);
+    document.getElementById("details-updated").textContent = new Date(clientRecord.updatedAt).toLocaleDateString();
+    noteInputElement.value = "";
+}
+
+function handleSetReminderClick() {
+    const clientRecord = findClientById(currentlyOpenClientId);
+    if (!clientRecord) {
+        return;
+    }
+
+    // Captured now rather than looked up again inside the timeout, so the
+    // reminder still names the right client even after the modal is closed
+    // or a different client's details are opened before the minute is up.
+    const remindedClientName = clientRecord.name;
+
+    showToastMessage("Reminder set ✓", "success");
+    setTimeout(() => {
+        showToastMessage(`🔔 Follow up: ${remindedClientName}`, "success");
+    }, 60000);
+}
+
+function setupClientDetailsModal() {
+    document.getElementById("add-note-form").addEventListener("submit", handleAddNoteFormSubmit);
+    document.getElementById("set-reminder-btn").addEventListener("click", handleSetReminderClick);
+}
+
 async function initializeClientsPage() {
     setupSearchFilterSortControls();
     setupModalCloseTriggers();
     setupAddClientModal();
     setupClientCardActions();
+    setupClientDetailsModal();
     showClientsLoadingState();
 
     try {
