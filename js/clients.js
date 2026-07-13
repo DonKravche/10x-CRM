@@ -284,10 +284,71 @@ function setupAddClientModal() {
     addClientFormElement.addEventListener("submit", handleAddClientFormSubmit);
 }
 
+function handleClientCardStatusChange(changeEvent) {
+    const statusSelectElement = changeEvent.target.closest('[data-action="change-status"]');
+    if (!statusSelectElement) {
+        return;
+    }
+
+    const clientCardElement = statusSelectElement.closest(".client-card");
+    const clientRecord = findClientById(clientCardElement.dataset.clientId);
+    if (!clientRecord) {
+        return;
+    }
+
+    const selectedStatusValue = statusSelectElement.value;
+    clientRecord.status = selectedStatusValue.charAt(0).toUpperCase() + selectedStatusValue.slice(1);
+    clientRecord.updatedAt = new Date().toISOString();
+
+    saveClients(allClientsList);
+    renderClientCards(getVisibleClients());
+}
+
+async function handleDeleteClientClick(clientId) {
+    const clientRecord = findClientById(clientId);
+    if (!clientRecord) {
+        return;
+    }
+
+    const userConfirmedDeletion = confirm("Delete this client? This cannot be undone.");
+    if (!userConfirmedDeletion) {
+        return;
+    }
+
+    // A 404 here is expected for clients we added ourselves (DummyJSON never
+    // actually persisted them) — deleteClientOnApi already tolerates that.
+    await deleteClientOnApi(clientId);
+
+    allClientsList = allClientsList.filter(existingClient => String(existingClient.id) !== String(clientId));
+    saveClients(allClientsList);
+    renderClientCards(getVisibleClients());
+
+    showToastMessage("Client deleted", "success");
+}
+
+function handleClientsContainerClick(clickEvent) {
+    const clientCardElement = clickEvent.target.closest(".client-card");
+    if (!clientCardElement) {
+        return;
+    }
+    const clientId = clientCardElement.dataset.clientId;
+
+    if (clickEvent.target.closest('[data-action="delete-client"]')) {
+        handleDeleteClientClick(clientId);
+    }
+}
+
+function setupClientCardActions() {
+    const clientsContainerElement = document.getElementById("clients-container");
+    clientsContainerElement.addEventListener("click", handleClientsContainerClick);
+    clientsContainerElement.addEventListener("change", handleClientCardStatusChange);
+}
+
 async function initializeClientsPage() {
     setupSearchFilterSortControls();
     setupModalCloseTriggers();
     setupAddClientModal();
+    setupClientCardActions();
     showClientsLoadingState();
 
     try {
