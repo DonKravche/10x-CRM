@@ -1,4 +1,74 @@
 let allClientsList = [];
+let activeStatusFilter = "all";
+let activeSortOption = "date-desc";
+let activeSearchQuery = "";
+
+function getVisibleClients() {
+    let visibleClients = [...allClientsList];
+
+    if (activeStatusFilter !== "all") {
+        visibleClients = visibleClients.filter(clientRecord =>
+            clientRecord.status.toLowerCase() === activeStatusFilter
+        );
+    }
+
+    if (activeSearchQuery !== "") {
+        const lowercaseSearchQuery = activeSearchQuery.toLowerCase();
+        visibleClients = visibleClients.filter(clientRecord =>
+            clientRecord.name.toLowerCase().includes(lowercaseSearchQuery) ||
+            clientRecord.company.toLowerCase().includes(lowercaseSearchQuery)
+        );
+    }
+
+    visibleClients.sort((firstClient, secondClient) => {
+        switch (activeSortOption) {
+            case "date-asc":
+                return new Date(firstClient.createdAt) - new Date(secondClient.createdAt);
+            case "name-asc":
+                return firstClient.name.localeCompare(secondClient.name);
+            case "name-desc":
+                return secondClient.name.localeCompare(firstClient.name);
+            case "value-desc":
+                return secondClient.dealValue - firstClient.dealValue;
+            case "date-desc":
+            default:
+                return new Date(secondClient.createdAt) - new Date(firstClient.createdAt);
+        }
+    });
+
+    return visibleClients;
+}
+
+function handleSearchInput(inputEvent) {
+    activeSearchQuery = inputEvent.target.value.trim();
+    renderClientCards(getVisibleClients());
+}
+
+function handleFilterChipClick(clickEvent) {
+    const clickedChipElement = clickEvent.target.closest(".filter-chip");
+    if (!clickedChipElement) {
+        return;
+    }
+
+    document.querySelectorAll(".filter-chip").forEach(chipElement => {
+        chipElement.classList.remove("filter-chip--active");
+    });
+    clickedChipElement.classList.add("filter-chip--active");
+
+    activeStatusFilter = clickedChipElement.dataset.filter;
+    renderClientCards(getVisibleClients());
+}
+
+function handleSortSelectChange(changeEvent) {
+    activeSortOption = changeEvent.target.value;
+    renderClientCards(getVisibleClients());
+}
+
+function setupSearchFilterSortControls() {
+    document.getElementById("search-input").addEventListener("input", handleSearchInput);
+    document.querySelector(".toolbar-filters__chips").addEventListener("click", handleFilterChipClick);
+    document.getElementById("sort-select").addEventListener("change", handleSortSelectChange);
+}
 
 function getClientInitials(clientName) {
     return clientName
@@ -82,12 +152,13 @@ function showClientsErrorState(errorMessageText) {
 }
 
 async function initializeClientsPage() {
+    setupSearchFilterSortControls();
     showClientsLoadingState();
 
     try {
         allClientsList = await loadClients();
         hideClientsLoadingState();
-        renderClientCards(allClientsList);
+        renderClientCards(getVisibleClients());
     } catch (loadError) {
         console.error(loadError);
         hideClientsLoadingState();
