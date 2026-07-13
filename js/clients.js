@@ -151,8 +151,143 @@ function showClientsErrorState(errorMessageText) {
     noClientsMessageElement.appendChild(retryButtonElement);
 }
 
+function openModal(modalElement) {
+    modalElement.classList.remove("hidden");
+}
+
+function closeModal(modalElement) {
+    modalElement.classList.add("hidden");
+}
+
+// Both the Add Client modal and the Client Details modal share the same
+// data-action="close-modal" convention, so one delegated setup covers both.
+function setupModalCloseTriggers() {
+    document.querySelectorAll('[data-action="close-modal"]').forEach(closeTriggerElement => {
+        closeTriggerElement.addEventListener("click", () => {
+            closeModal(closeTriggerElement.closest(".modal"));
+        });
+    });
+}
+
+function validateAddClientFields(nameValue, emailValue, phoneValue, dealValueValue) {
+    const validationErrors = {};
+
+    if (nameValue.trim().length < 3) {
+        validationErrors.name = "Name must be at least 3 characters";
+    }
+
+    if (!isValidEmailFormat(emailValue)) {
+        validationErrors.email = "Please enter a valid email address";
+    } else {
+        const lowercaseEmail = emailValue.toLowerCase();
+        const emailAlreadyExists = allClientsList.some(clientRecord =>
+            clientRecord.email.toLowerCase() === lowercaseEmail
+        );
+        if (emailAlreadyExists) {
+            validationErrors.email = "A client with this email already exists";
+        }
+    }
+
+    const trimmedPhoneValue = phoneValue.trim();
+    if (trimmedPhoneValue !== "" && trimmedPhoneValue.length < 6) {
+        validationErrors.phone = "Phone number looks too short";
+    }
+
+    const dealValueAsNumber = Number(dealValueValue);
+    if (dealValueValue.trim() === "" || Number.isNaN(dealValueAsNumber) || dealValueAsNumber <= 0) {
+        validationErrors.dealValue = "Deal value must be a positive number";
+    }
+
+    return validationErrors;
+}
+
+async function handleAddClientFormSubmit(submitEvent) {
+    submitEvent.preventDefault();
+
+    const addClientFormElement = submitEvent.target;
+    clearAllFieldErrors(addClientFormElement);
+
+    const nameValue = document.getElementById("client-name").value;
+    const emailValue = document.getElementById("client-email").value.trim();
+    const phoneValue = document.getElementById("client-phone").value;
+    const companyValue = document.getElementById("client-company").value.trim();
+    const dealValueValue = document.getElementById("client-deal-value").value;
+    const statusValue = document.getElementById("client-status").value;
+
+    const validationErrors = validateAddClientFields(nameValue, emailValue, phoneValue, dealValueValue);
+
+    if (validationErrors.name) {
+        displayFieldError("client-name", validationErrors.name);
+    }
+    if (validationErrors.email) {
+        displayFieldError("client-email", validationErrors.email);
+    }
+    if (validationErrors.phone) {
+        displayFieldError("client-phone", validationErrors.phone);
+    }
+    if (validationErrors.dealValue) {
+        displayFieldError("client-deal-value", validationErrors.dealValue);
+    }
+
+    if (Object.keys(validationErrors).length > 0) {
+        return;
+    }
+
+    try {
+        const apiResponse = await createClientOnApi({
+            name: nameValue.trim(),
+            email: emailValue,
+            phone: phoneValue.trim(),
+            company: companyValue
+        });
+
+        const nowAsIsoString = new Date().toISOString();
+        const capitalizedStatus = statusValue.charAt(0).toUpperCase() + statusValue.slice(1);
+
+        const newClient = {
+            id: apiResponse.id,
+            name: nameValue.trim(),
+            email: emailValue,
+            phone: phoneValue.trim(),
+            company: companyValue,
+            image: "",
+            status: capitalizedStatus,
+            dealValue: Number(dealValueValue),
+            notes: [],
+            createdAt: nowAsIsoString,
+            updatedAt: nowAsIsoString
+        };
+
+        allClientsList.unshift(newClient);
+        saveClients(allClientsList);
+        renderClientCards(getVisibleClients());
+
+        closeModal(document.getElementById("add-client-modal"));
+        showToastMessage("Client added ✓", "success");
+    } catch (createError) {
+        console.error(createError);
+        showToastMessage("Could not add the client. Please try again.", "error");
+    }
+}
+
+function setupAddClientModal() {
+    const addClientModalElement = document.getElementById("add-client-modal");
+    const addClientButtonElement = document.getElementById("add-client-btn");
+    const addClientFormElement = document.getElementById("add-client-form");
+
+    addClientButtonElement.addEventListener("click", () => {
+        addClientFormElement.reset();
+        clearAllFieldErrors(addClientFormElement);
+        openModal(addClientModalElement);
+    });
+
+    addClientFormElement.addEventListener("submit", handleAddClientFormSubmit);
+}
+
 async function initializeClientsPage() {
     setupSearchFilterSortControls();
+    setupModalCloseTriggers();
+    setupAddClientModal();
     showClientsLoadingState();
 
     try {
