@@ -32,8 +32,50 @@ function displayProfileInfo() {
     emailInputElement.readOnly = true;
 }
 
+function validateEditProfileFields(fullNameValue) {
+    const validationErrors = {};
+
+    if (fullNameValue.trim().length < 3) {
+        validationErrors.fullName = "Full name must be at least 3 characters";
+    }
+
+    return validationErrors;
+}
+
+function handleEditProfileFormSubmit(submitEvent) {
+    submitEvent.preventDefault();
+
+    const editProfileFormElement = submitEvent.target;
+    clearAllFieldErrors(editProfileFormElement);
+
+    const fullNameValue = document.getElementById("profile-fullname").value;
+    const companyValue = document.getElementById("profile-company").value.trim();
+
+    const validationErrors = validateEditProfileFields(fullNameValue);
+    if (validationErrors.fullName) {
+        displayFieldError("profile-fullname", validationErrors.fullName);
+        return;
+    }
+
+    const currentSession = getCurrentSession();
+    const allUsers = getStorage(STORAGE_KEYS.USERS) || [];
+    const userRecord = allUsers.find(existingUser => existingUser.id === currentSession.userId);
+    if (!userRecord) {
+        return;
+    }
+
+    userRecord.fullName = fullNameValue.trim();
+    userRecord.company = companyValue;
+    userRecord.updatedAt = new Date().toISOString();
+    setStorage(STORAGE_KEYS.USERS, allUsers);
+
+    displayProfileInfo();
+    showToastMessage("Profile updated ✓", "success");
+}
+
 function initializeProfilePage() {
     displayProfileInfo();
+    document.getElementById("edit-profile-form").addEventListener("submit", handleEditProfileFormSubmit);
 }
 
 initializeProfilePage();
