@@ -207,9 +207,19 @@ function validateAddClientFields(nameValue, emailValue, phoneValue, dealValueVal
         }
     }
 
+    // Phone stays optional, but when present it must look like a real phone
+    // number: only digits and common punctuation (+, -, spaces, parentheses).
+    // type="tel" does not block letters, so the format check lives here. The
+    // length rule counts actual digits, not punctuation, so "+1 (5)" is short.
     const trimmedPhoneValue = phoneValue.trim();
-    if (trimmedPhoneValue !== "" && trimmedPhoneValue.length < 6) {
-        validationErrors.phone = "Phone number looks too short";
+    if (trimmedPhoneValue !== "") {
+        const containsOnlyPhoneCharacters = /^[\d\s()+-]+$/.test(trimmedPhoneValue);
+        const digitCount = trimmedPhoneValue.replace(/\D/g, "").length;
+        if (!containsOnlyPhoneCharacters) {
+            validationErrors.phone = "Please enter a valid phone number";
+        } else if (digitCount < 6) {
+            validationErrors.phone = "Phone number looks too short";
+        }
     }
 
     const dealValueAsNumber = Number(dealValueValue);
