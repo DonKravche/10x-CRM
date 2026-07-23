@@ -4,8 +4,8 @@
   "private": true,
   "description": "Vanilla JS CRM with SCSS styling",
   "scripts": {
-    "build:css": "sass scss/main.scss css/main.css --no-source-map",
-    "watch:css": "sass --watch scss/main.scss css/main.css"
+    "build:css": "sass scss/main.scss html/css/main.css --no-source-map",
+    "watch:css": "sass --watch scss/main.scss:html/css/main.css"
   },
   "devDependencies": {
     "sass": "^1.101.0"
