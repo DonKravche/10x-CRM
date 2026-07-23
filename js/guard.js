@@ -143,24 +143,35 @@ function setupLogoutButton() {
 
 // Runs the moment this script executes (it is loaded at the end of <body>,
 // so the DOM it needs already exists — no need to wait for DOMContentLoaded).
+// Guard checks are delayed by 500ms on auth pages to allow auth.js (which loads
+// immediately after) time to display success/failure messages before redirecting.
 function initializeGuard() {
     const currentSession = getCurrentSession();
     const isProtectedPage = Boolean(document.querySelector(".app-layout"));
     const isPublicAuthPage = document.body.classList.contains("auth-page");
 
-    if (isProtectedPage && !currentSession) {
-        window.location.href = "index.html";
-        return;
-    }
+    const performGuardCheck = () => {
+        if (isProtectedPage && !currentSession) {
+            window.location.href = "index.html";
+            return;
+        }
 
-    if (isPublicAuthPage && currentSession) {
-        window.location.href = "dashboard.html";
-        return;
-    }
+        if (isPublicAuthPage && currentSession) {
+            window.location.href = "dashboard.html";
+            return;
+        }
 
-    applyStoredThemePreference();
-    setupThemeToggleButton();
-    setupLogoutButton();
+        applyStoredThemePreference();
+        setupThemeToggleButton();
+        setupLogoutButton();
+    };
+
+    // Delay guard check on auth pages to let auth.js display messages first
+    if (isPublicAuthPage) {
+        setTimeout(performGuardCheck, 500);
+    } else {
+        performGuardCheck();
+    }
 }
 
 initializeGuard();
