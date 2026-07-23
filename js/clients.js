@@ -4,7 +4,7 @@ let activeSortOption = "date-desc";
 let activeSearchQuery = "";
 
 function getVisibleClients() {
-    let visibleClients = [...allClientsList];
+    let visibleClients = [...allClientsList]; // we are doing a shallow copy here so we don't mutate the original array when sorting
 
     if (activeStatusFilter !== "all") {
         visibleClients = visibleClients.filter(clientRecord =>
@@ -13,7 +13,7 @@ function getVisibleClients() {
     }
 
     if (activeSearchQuery !== "") {
-        const lowercaseSearchQuery = activeSearchQuery.toLowerCase();
+        const lowercaseSearchQuery = activeSearchQuery.toLowerCase(); // case-insensitive search
         visibleClients = visibleClients.filter(clientRecord =>
             clientRecord.name.toLowerCase().includes(lowercaseSearchQuery) ||
             clientRecord.company.toLowerCase().includes(lowercaseSearchQuery)
@@ -80,6 +80,25 @@ function getClientInitials(clientName) {
 
 function findClientById(clientId) {
     return allClientsList.find(clientRecord => String(clientRecord.id) === String(clientId));
+}
+
+// DummyJSON's POST /users/add never persists, so it returns the SAME id for
+// every added client. Trusting that id verbatim gives two clients one id, and
+// deleting either would filter out both. So we keep the API id only when it is
+// actually unique locally, and otherwise fall back to a guaranteed-unique id.
+function generateUniqueClientId(preferredClientId) {
+    const isClientIdAlreadyUsed = candidateClientId =>
+        allClientsList.some(existingClient => String(existingClient.id) === String(candidateClientId));
+
+    if (preferredClientId !== undefined && preferredClientId !== null && !isClientIdAlreadyUsed(preferredClientId)) {
+        return preferredClientId;
+    }
+
+    let uniqueClientId = Date.now();
+    while (isClientIdAlreadyUsed(uniqueClientId)) {
+        uniqueClientId += 1;
+    }
+    return uniqueClientId;
 }
 
 function renderClientCards(clientsToDisplay) {
@@ -245,7 +264,7 @@ async function handleAddClientFormSubmit(submitEvent) {
         const capitalizedStatus = statusValue.charAt(0).toUpperCase() + statusValue.slice(1);
 
         const newClient = {
-            id: apiResponse.id,
+            id: generateUniqueClientId(apiResponse.id),
             name: nameValue.trim(),
             email: emailValue,
             phone: phoneValue.trim(),
