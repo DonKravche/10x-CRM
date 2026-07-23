@@ -136,9 +136,12 @@ function handleSignupFormSubmit(submitEvent) {
     setStorage(STORAGE_KEYS.USERS, allUsers);
 
     showToastMessage("Account created successfully! Please log in.", "success");
+    // Wait for the toast animation to complete before redirecting (3.5s total:
+    // 3s toast visibility + 0.5s buffer). This prevents guard.js from redirecting
+    // the user before the success message displays.
     setTimeout(() => {
         window.location.href = "index.html";
-    }, 1500);
+    }, 3500);
 }
 
 function initializeAuthPage() {
