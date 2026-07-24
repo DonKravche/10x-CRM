@@ -87,8 +87,42 @@ function clearAllFieldErrors(formElement) {
     });
 }
 
+// Latin-only. The previous [^\s@] classes accepted any non-space character, so
+// "ნინო@example.com" counted as a valid address. The error text is unchanged.
 function isValidEmailFormat(emailValue) {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailValue);
+    return /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(emailValue);
+}
+
+// Anything outside printable ASCII — Georgian letters above all.
+const NON_LATIN_INPUT_PATTERN = /[^\x20-\x7E]/g;
+
+// Credentials are compared character by character at login, so a Georgian letter
+// typed by accident would silently lock a user out of their own account. Applied
+// to email and password fields only; names and companies stay unrestricted.
+function restrictFieldToLatinInput(inputElementId) {
+    const inputElement = document.getElementById(inputElementId);
+    if (!inputElement) {
+        return;
+    }
+
+    inputElement.addEventListener("input", () => {
+        const typedValue = inputElement.value;
+        const latinOnlyValue = typedValue.replace(NON_LATIN_INPUT_PATTERN, "");
+        if (latinOnlyValue === typedValue) {
+            return;
+        }
+
+        // selectionStart reads null on type="email" inputs, where setSelectionRange
+        // also throws, so the caret is only restored where the field supports it.
+        const caretPositionBeforeStrip = inputElement.selectionStart;
+        inputElement.value = latinOnlyValue;
+
+        if (caretPositionBeforeStrip !== null) {
+            const removedCharacterCount = typedValue.length - latinOnlyValue.length;
+            const restoredCaretPosition = caretPositionBeforeStrip - removedCharacterCount;
+            inputElement.setSelectionRange(restoredCaretPosition, restoredCaretPosition);
+        }
+    });
 }
 
 function isValidPasswordFormat(passwordValue) {
