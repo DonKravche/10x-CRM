@@ -43,6 +43,7 @@ Deployed on Vercel. The site root redirects to the login page.
 - Dark/light theme toggle, persisted across pages and reloads
 - Toast notifications that auto-hide after 3 seconds
 - Inline field-level error messages under each invalid input
+- Email and password fields accept Latin characters only — a Georgian character typed or pasted by accident is stripped as you type, so it can never silently lock you out of your own account. Name and company fields stay unrestricted and accept Georgian freely.
 
 ## Tech Stack
 
