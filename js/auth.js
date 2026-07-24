@@ -148,11 +148,17 @@ function initializeAuthPage() {
     const loginFormElement = document.getElementById("login-form");
     if (loginFormElement) {
         loginFormElement.addEventListener("submit", handleLoginFormSubmit);
+        restrictFieldToLatinInput("login-email");
+        restrictFieldToLatinInput("login-password");
     }
 
     const signupFormElement = document.getElementById("signup-form");
     if (signupFormElement) {
         signupFormElement.addEventListener("submit", handleSignupFormSubmit);
+        // Full name and company are left alone on purpose — those may be Georgian.
+        restrictFieldToLatinInput("signup-email");
+        restrictFieldToLatinInput("signup-password");
+        restrictFieldToLatinInput("signup-confirm-password");
     }
 }
 

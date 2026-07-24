@@ -159,6 +159,13 @@ function initializeProfilePage() {
     document.getElementById("edit-profile-form").addEventListener("submit", handleEditProfileFormSubmit);
     document.getElementById("change-password-form").addEventListener("submit", handleChangePasswordFormSubmit);
     document.getElementById("reset-data-btn").addEventListener("click", handleResetDataClick);
+
+    // Full name and company stay unrestricted — those may be Georgian. The email
+    // field is already read-only, but is guarded too in case that ever changes.
+    restrictFieldToLatinInput("profile-email");
+    restrictFieldToLatinInput("current-password");
+    restrictFieldToLatinInput("new-password");
+    restrictFieldToLatinInput("confirm-new-password");
 }
 
 initializeProfilePage();
