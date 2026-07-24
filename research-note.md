@@ -66,3 +66,43 @@ removes the client from local state.
 Before hunting for a bug in your own code, make sure you know what the external API
 actually returns. I was looking for a logic error where none existed — the cause was
 documented behaviour of the API itself.
+
+---
+
+## Additional source consulted
+
+**MDN — `HTMLInputElement.setSelectionRange()`**
+https://developer.mozilla.org/en-US/docs/Web/API/HTMLInputElement/setSelectionRange
+
+**Search keywords:** `setSelectionRange throws email input`,
+`InvalidStateError input type email selectionStart null`
+
+I needed this while restricting the email and password fields to Latin characters.
+To strip a Georgian character as it is typed I have to rewrite `input.value`, but that
+jumps the cursor to the end of the field, so I wanted to restore the caret with
+`setSelectionRange()`.
+
+MDN documents that this method — and the `selectionStart` property — are only supported
+on inputs of type `text`, `search`, `url`, `tel` and `password`. On `email` and `number`
+inputs `selectionStart` reads as `null` and calling `setSelectionRange()` throws an
+`InvalidStateError`. Since three of my restricted fields (`login-email`,
+`signup-email`, `profile-email`) are `type="email"`, calling it blindly would have
+crashed the page on every keystroke.
+
+**რეზიუმე (ქართულად):** MDN-ის დოკუმენტაციით `setSelectionRange()` და
+`selectionStart` მუშაობს მხოლოდ `text`, `search`, `url`, `tel` და `password` ტიპის
+ველებზე. `email` და `number` ტიპებზე `selectionStart` `null`-ს აბრუნებს, ხოლო
+`setSelectionRange()` შეცდომას (`InvalidStateError`) აგდებს. რადგან ჩემი სამი
+შეზღუდული ველი `type="email"`-ია, ამ მეთოდის პირდაპირ გამოძახება ყოველ კლავიშზე
+გვერდს ჩამოაგდებდა.
+
+**How I applied it:** the caret is restored only when the field supports it:
+
+```js
+const caretPositionBeforeStrip = inputElement.selectionStart;
+inputElement.value = latinOnlyValue;
+
+if (caretPositionBeforeStrip !== null) {
+    inputElement.setSelectionRange(restoredCaretPosition, restoredCaretPosition);
+}
+```
