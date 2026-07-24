@@ -48,15 +48,19 @@ users and client data survive.
 **In my own words:** Validation means inspecting what the user typed before saving it.
 A name must be at least 3 characters, an email must have a valid shape, and a deal
 value must be a positive number. If a rule is broken the form is not submitted and a
-red error appears under the field.
+red error appears under the field. Validation must also be strict enough: my original
+email pattern `[^\s@]` accepted any character that was not a space or an `@`, so
+`ნინო@example.com` passed as valid until I tightened it to Latin-only.
 
 **ქართულად:** ვალიდაცია ნიშნავს მომხმარებლის შეყვანილი მონაცემის შემოწმებას მის
 შენახვამდე. მაგალითად, სახელი უნდა იყოს მინიმუმ 3 სიმბოლო, email-ს უნდა ჰქონდეს
 სწორი ფორმა, deal value კი დადებითი რიცხვი. თუ წესი დაირღვა, ფორმა არ იგზავნება
-და ველის ქვეშ წითელი შეცდომა ჩნდება.
+და ველის ქვეშ წითელი შეცდომა ჩნდება. ვალიდაცია საკმარისად მკაცრიც უნდა იყოს:
+ჩემი თავდაპირველი შაბლონი `[^\s@]` ნებისმიერ სიმბოლოს უშვებდა, ამიტომ
+`ნინო@example.com` ვალიდურად ითვლებოდა, სანამ მხოლოდ ლათინურზე არ შევზღუდე.
 
 **Where it is used:** `js/clients.js` → `validateAddClientFields()`;
-`js/auth.js` → `validateSignupFields()`.
+`js/auth.js` → `validateSignupFields()`; `js/guard.js` → `isValidEmailFormat()`.
 
 ---
 
@@ -163,7 +167,11 @@ delegation.
 დგას კონტეინერზე და `data-client-id`-ით ვიგებ, რომელ კლიენტზეა საუბარი
 (ე.წ. event delegation).
 
-**Where it is used:** `js/clients.js` → `setupClientCardActions()`.
+I also use the `input` event, which fires on every keystroke and paste, to strip
+non-Latin characters out of the email and password fields as they are typed.
+
+**Where it is used:** `js/clients.js` → `setupClientCardActions()`;
+`js/guard.js` → `restrictFieldToLatinInput()` for the `input` event.
 
 ---
 
